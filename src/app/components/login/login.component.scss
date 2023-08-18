@@ -1,0 +1,22 @@
+.parent_home {
+    background-image: url(../../../assets/login_home.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+}
+
+.login_page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-card {
+    background: #ffffff24;
+}
