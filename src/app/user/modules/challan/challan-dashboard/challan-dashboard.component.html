@@ -1,0 +1,70 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit(userForm.value)">
+<div class="p-3 p-md-5 row">
+    <div class="col-12 col-md-4">
+        <mat-form-field>
+            <mat-label>Name:</mat-label>
+            <input matInput>
+        </mat-form-field>
+    </div>
+    <div class="col-12 col-md-4">
+        <mat-form-field>
+            <mat-label>Address:</mat-label>
+            <input matInput>
+        </mat-form-field>
+    </div>
+    <div class="col-12 col-md-4">
+        <mat-form-field>
+            <mat-label>Phone No:</mat-label>
+            <input matInput>
+        </mat-form-field>
+    </div>
+</div>
+<div class="p-3 p-md-5 row justify-content-between align-items-center">
+    <div class="col-12 col-md-2">
+        <mat-form-field>
+            <mat-label>Product Name:</mat-label>
+            <input matInput>
+        </mat-form-field>
+    </div>
+    <!-- <div class="cross-icon product_divider col-12 col-md-1 p-0 d-flex justify-content-center align-items-center">
+        <img class="p-0" src="../../../../../assets/two-dots.svg" alt="">
+    </div> -->
+    <div class="col-12 col-md-9">
+        <div class="row">
+            <div class="col-12 col-md-2">
+                <mat-form-field>
+                    <mat-label>Quantity:</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="cross-icon col-12 col-md-1 p-0 d-flex justify-content-center align-items-center">
+                <img class="" src="../../../../../assets/x-symbol.svg" alt="">
+            </div>
+            <div class="col-12 col-md-2">
+                <mat-form-field>
+                    <mat-label>Price:</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="cross-icon col-12 col-md-1 p-0 d-flex justify-content-center align-items-center">
+                <img class="" src="../../../../../assets/x-symbol.svg" alt="">
+            </div>
+            <div class="col-12 col-md-2">
+                <mat-form-field>
+                    <mat-label>Count:</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+            <div class="cross-icon col-12 col-md-1 p-0 d-flex justify-content-center align-items-center">
+                <img class="" src="../../../../../assets/equal.svg" alt="">
+            </div>
+            <div class="ml-4 col-12 col-md-3">
+                <mat-form-field>
+                    <mat-label>Total Price:</mat-label>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
