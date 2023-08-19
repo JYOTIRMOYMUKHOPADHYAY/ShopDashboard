@@ -6,8 +6,10 @@ import { RegisterComponent } from './components/register/register.component';
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  {path: 'dashboard',
-   loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+  },
   { path: '**', component: LoginComponent }
 ];
 

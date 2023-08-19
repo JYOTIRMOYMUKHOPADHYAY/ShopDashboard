@@ -8,12 +8,8 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 
 
-//MATERIAL COMPONENTS
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatInputModule } from '@angular/material/input';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
+//MATERIAL MODULES
+import { SharedMaterialModuleModule } from './shared-material-module/shared-material-module.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,11 +20,7 @@ import {MatDividerModule} from '@angular/material/divider';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-     MatCardModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatDividerModule
+    SharedMaterialModuleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
