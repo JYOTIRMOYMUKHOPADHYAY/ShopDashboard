@@ -18,8 +18,8 @@ import { SharedMaterialModuleModule } from './shared-material-module/shared-mate
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     SharedMaterialModuleModule
   ],
   providers: [],

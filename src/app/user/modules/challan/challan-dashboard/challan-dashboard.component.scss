@@ -54,11 +54,16 @@ mat-form-field {
   }
   
   .nested_form{
-    max-height: 50vh;
+    max-height: 40vh;
     overflow-y: auto;
   }
-  .total-amount {
-    font-size: 25px;
-    color: red;
+  .total-amount, .payment-amount {
+    font-size: 20px;
     font-weight: bold;
+  }
+  .total-amount{
+    color: red;
+  }
+  .payment-recieve{
+    max-width: 140px;
   }
