@@ -3,5 +3,6 @@ export const purchaseDetailsTemplate = [
     { name: 'measurement', label: 'Measurement(ml/Lt/g)', disabled: false },
     { name: 'price', label: 'Price', disabled: false, defaultValue: 0 },
     { name: 'count', label: 'Count', disabled: false, defaultValue: 0 },
+    { name: 'type', label: 'Type', disabled: false, defaultValue: 0 },
     { name: 'total_price', label: 'Total Price', disabled: true, defaultValue: 0 }
 ];

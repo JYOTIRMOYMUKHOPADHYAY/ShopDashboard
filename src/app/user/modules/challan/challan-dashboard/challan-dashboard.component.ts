@@ -64,8 +64,8 @@ export class ChallanDashboardComponent implements OnInit {
   updateTotalPrice(purchaseFormGroup: FormGroup): void {
     const price = purchaseFormGroup.get('price')!.value;
     const count = purchaseFormGroup.get('count')!.value;
-    const total_price = Math.round(price * count);
-    purchaseFormGroup.get('total_price')!.setValue(total_price);
+    const total_price = (price * count).toFixed(2);
+    purchaseFormGroup.get('total_price')!.setValue(parseFloat(total_price));
   }
 
   removePurchase(index: number): void {
@@ -76,10 +76,11 @@ export class ChallanDashboardComponent implements OnInit {
     let totalAmount = 0;
     this.purchaseDetailsFormArray.controls.forEach((purchaseGroup) => {
       if (purchaseGroup.get('total_price')!.value > 0) {
-        totalAmount += Math.round(purchaseGroup.get('total_price')!.value);
+        totalAmount += purchaseGroup.get('total_price')!.value;
+        ;
       }
     });
-    return totalAmount;
+    return Math.ceil(totalAmount);
   }
 
   calculateDueAmount(): number {
@@ -89,9 +90,25 @@ export class ChallanDashboardComponent implements OnInit {
       return 0;
     }
     this.dynamicHtml = this.sanitizer.bypassSecurityTrustHtml('');
-    return this.calculateTotalAmount() > 0 ? this.calculateTotalAmount() - this.userForm.value.paymentRecieve : 0
+    return this.calculateTotalAmount() > 0 ? balance : 0
+  }
+  calculateDue(data: any) {
+    let due = this.calculateTotalAmount() - data.paymentRecieve
+    if (due < 0) {
+      return 0
+    } else {
+      return due
+    }
   }
 
+  calculateAdvance(data: any) {
+    let due = this.calculateTotalAmount() - data.paymentRecieve
+    if (due < 0) {
+      return Math.abs(due)
+    } else {
+      return 0
+    }
+  }
   onSubmit(): void {
     if (this.userForm.valid) {
       const formData = this.userForm.value;
@@ -104,7 +121,7 @@ export class ChallanDashboardComponent implements OnInit {
 
 
   generatePdf(data: any) {
-     return pdfMake.createPdf({
+    return pdfMake.createPdf({
       content: [
         {
           text: 'INVOICE',
@@ -123,72 +140,115 @@ export class ChallanDashboardComponent implements OnInit {
             [
               {
                 text: data.name,
-                bold:true
+                bold: true,
+                style: 'userDetails'
               },
-              { text: data.address },
-              { text: data.phone_no}
+              { text: data.address, style: 'userDetails' },
+              { text: data.phone_no, style: 'userDetails' }
             ],
             [
               {
-                text: `Date: ${new Date().toLocaleString()}`,
-                alignment: 'right'
+                text: `Invoice Date: ${new Date().toLocaleString()}`,
+                alignment: 'right',
+                style: 'userDetails'
               },
-              { 
-                text: `Bill No : ${((Math.random() *1000).toFixed(0))}`,
-                alignment: 'right'
+              {
+                text: `Invoice No : ${((Math.random() * 1000).toFixed(0))}`,
+                alignment: 'right',
+                style: 'userDetails'
               }
             ]
           ]
         },
         {
-          text: 'Order Details',
-          style: 'sectionHeader'
-        },
-        {
           table: {
             headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto'],
+            widths: [10, '*', 80, 80, 80],
             body: [
-              [{text: 'Product Name', style: 'tableHeader'}, {text: 'Price', style: 'tableHeader'}, {text: 'Quantity', style: 'tableHeader'}, {text: 'Amount', style: 'tableHeader'}],
-              ...data.purchaseDetails.map((p: any) => ([p.product_name + " (" + p.measurement + ")", p.price, p.count, (parseInt(p.price)*parseInt(p.count)).toFixed(2)])),
-              [{text: 'Total Amount', colSpan: 3, style: 'tableHeader'}, {}, {}, {text: this.calculateTotalAmount(), style: 'tableHeader'}],
-              [{text: 'Payment Receive', colSpan: 3 ,style: 'tableHeader'}, {}, {}, {text: data.paymentRecieve, style: 'tableHeader'}],
-              [{text: 'Due', colSpan: 3, style: 'tableHeader'}, {}, {}, {text: this.calculateTotalAmount() - data.paymentRecieve, style: 'tableHeader'}]
+              [{ text: '#', style: 'tableHeader' }, { text: 'Item & Description', style: 'tableHeader' }, { text: 'Quantity', style: 'tableHeader' }, { text: 'Rate(₹)', style: 'tableHeader' }, { text: 'Amount(₹)', style: 'tableHeader' }],
+              ...data.purchaseDetails.map((p: any, index: number) => ([{ text: index + 1, style: 'tablebody' }, { text: p.product_name + " (" + p.measurement + ")", style: 'tablebody' }, { text: p.count + " " + p.type, style: 'tablebody' }, { text: p.price + ".00", style: 'tablebody' }, { text: (parseInt(p.price) * parseInt(p.count)).toFixed(2), style: 'tablebody' }])),
+              [{ text: '', colSpan: 2, border: [false, false, false, false], }, {}, { text: 'Total Amount', colSpan: 2, style: 'tableFooter', border: [false, false, false, false], }, {}, { text: this.calculateTotalAmount().toFixed(2) + ' (₹) ', style: 'tablePricingFooter' }],
+              // [{ text: '', colSpan: 2, border: [false, false, false, false], }, {}, { text: 'Payment Receive', colSpan: 2, style: 'tableFooter', border: [false, false, false, false], }, {}, { text: data.paymentRecieve + ".00", style: 'tableFooter' }],
+              // [{ text: '', colSpan: 2, border: [false, false, false, false], }, {}, { text: 'Due', colSpan: 2, style: 'tableFooter', border: [false, false, false, false], }, {}, { text: this.calculateDue(data) + '.00', style: 'tableFooter' }],
+              // [{ text: '', colSpan: 2, border: [false, false, false, false], }, {}, { text: 'Advance amount', colSpan: 2, style: 'tableFooter', border: [false, false, false, false] }, {}, { text: this.calculateAdvance(data) + '.00', style: 'tableFooter' }]
             ]
-          }
+          },
+          layout: 'lightHorizontalLines',
+          margin: [0, 50, 0, 70]
         },
+        // {
+        //   text: 'Additional Details',
+        //   style: 'sectionHeader'
+        // },
+        // {
+        //   text: "this.invoice.additionalDetails",
+        //   margin: [0, 0, 0, 15]
+        // },
+
         {
-          text: 'Additional Details',
-          style: 'sectionHeader'
-        },
-        {
-            text: "this.invoice.additionalDetails",
-            margin: [0, 0 ,0, 15]          
-        },
-       
-        {
-          text: 'Terms and Conditions',
-          style: 'sectionHeader'
-        },
-        {
-            ul: [
-              'Order can be return in max 10 days.',
-              'Warrenty of the product will be subject to the manufacturer terms and conditions.',
-              'This is system generated invoice.',
+          columns: [
+            [
+              {
+                text: "Buyer's Signature ______________________________",
+                bold: true,
+                style: 'userDetails'
+              }
             ],
+            [
+              {
+                text: "Seller's Signature ______________________________",
+                bold: true,
+                alignment: 'right',
+                style: 'userDetails'
+              }
+            ]
+          ]
+        },
+        {
+          text: 'Thank you for your business.',
+          style: 'tablebody',
+          alignment: 'center',
+          margin: [0, 50, 0, 50]
         }
       ],
       styles: {
         sectionHeader: {
           bold: true,
           decoration: 'underline',
-          fontSize: 14,
-          margin: [0, 15,0, 15]          
+          fontSize: 15,
+          margin: [0, 20, 0, 20]
+        },
+        userDetails: {
+          bold: true,
+          fontSize: 10,
+          margin: [0, 2, 0, 2]
         },
         tableHeader: {
           bold: true,
-          fontSize: 13,
-          color: 'black'
+          fontSize: 10,
+          color: 'white',
+          fillColor: "black",
+          margin: [10, 5, 10, 5]
+        },
+        tablebody: {
+          bold: false,
+          fontSize: 9,
+          color: 'black',
+          margin: [10, 5, 10, 5]
+        },
+        tablePricingFooter: {
+          bold: true,
+          fontSize: 10,
+          color: 'black',
+          fillColor: '#dee0e3',
+          margin: [10, 3, 0, 3]
+        },
+        tableFooter: {
+          bold: true,
+          fontSize: 10,
+          color: 'black',
+          fillColor: '#dee0e3',
+          margin: [10, 3, 10, 3]
         }
       }
     }).print();
